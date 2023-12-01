@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { RequestDataDto } from './dto/request-data.dto';
-import { ResponseMessageDto } from './dto/response-message.dto';
-import { AppService } from './app.service';
+import { Controller, UseGuards, Get, Post, Body } from '@nestjs/common';
+import { RequestDataDto } from '@/dto/request-data.dto';
+import { ResponseMessageDto } from '@/dto/response-message.dto';
+import { AppService } from '@/app.service';
+import { TokenGuard } from '@/common/guards/token.guard';
 
 @Controller('api')
+@UseGuards(TokenGuard)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -14,7 +16,6 @@ export class AppController {
 
   @Post()
   handleRequest(@Body() requestData: RequestDataDto) {
-    console.log('request');
     const response: ResponseMessageDto[] = requestData.messages.map((msg) => {
       return {
         status: 'OK',
