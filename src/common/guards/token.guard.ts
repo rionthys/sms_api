@@ -1,20 +1,15 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Request } from 'express';
-import { RequestDataDto } from '@/dto/request-data.dto';
-import { AuthService } from './auth.service';
+import { FastifyRequest } from 'fastify';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class TokenGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor(private tokenService: TokenService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
-    const requestData: RequestDataDto = request.body;
-
-    if (!requestData.token) {
-      return false;
-    }
-
-    return this.authService.validateToken(requestData.token);
+    const httpAdapter = context.switchToHttp();
+    const request = httpAdapter.getRequest<FastifyRequest>();
+    const body = request.body as { token: string };
+    return this.tokenService.validateToken(body.token);
   }
 }

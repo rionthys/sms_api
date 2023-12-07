@@ -33,6 +33,10 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-.env
 cspell.json
+
+# Config
+.env
+config/*
+!config/default.json
+!config/*.example.json
