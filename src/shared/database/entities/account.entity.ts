@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  Index,
 } from 'typeorm';
 import { Sms } from '@/shared/database/entities/sms.entity';
 
@@ -17,6 +18,7 @@ export class Account {
   name?: string;
 
   @Column({ type: 'uuid', unique: true, default: () => 'uuid_generate_v4()' })
+  @Index()
   token?: string;
 
   @CreateDateColumn({ name: 'created_at' })

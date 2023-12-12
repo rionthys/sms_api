@@ -5,20 +5,23 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
+  Index,
 } from 'typeorm';
 import { Account } from '@/shared/database/entities/account.entity';
 import { ErrorResponse } from '@/shared/interfaces/error-response.interface';
-import { BulkSmsResponse } from '@/modules/sms-sender/dto/bulk-sms-response.dto';
+import { BulkSmsResponseDto } from '@/modules/sms-sender/dto/bulk-sms-response.dto';
 
 @Entity()
 export class Sms {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'uuid', unique: true, default: () => 'uuid_generate_v4()' })
+  @Column({ type: 'uuid', nullable: true })
+  @Index()
   sid?: string;
 
   @Column({ nullable: true })
+  @Index()
   account_id?: number;
 
   @CreateDateColumn({ name: 'created_at' })
@@ -27,8 +30,9 @@ export class Sms {
   @Column({ type: 'timestamp', nullable: true, name: 'delivered_at' })
   delivered_at?: Date;
 
-  @Column({ nullable: true })
-  nrid?: string;
+  @Column({ type: 'uuid', nullable: true })
+  @Index()
+  NRID?: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   service_id?: string;
@@ -55,7 +59,7 @@ export class Sms {
   parts?: number;
 
   @Column({ type: 'json', nullable: true })
-  log?: ErrorResponse | BulkSmsResponse;
+  log?: ErrorResponse | BulkSmsResponseDto;
 
   @Column({ type: 'varchar', length: 255, nullable: true, default: '' })
   callback_url?: string;

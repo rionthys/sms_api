@@ -1,6 +1,6 @@
 import { ErrorResponse } from '@/shared/interfaces/error-response.interface';
 
-export class SmsResponse {
+export class SmsResponseDto {
   status: 'OK' | 'ERROR';
   to?: string;
   sid?: string;
@@ -8,6 +8,6 @@ export class SmsResponse {
   error?: ErrorResponse;
 }
 
-export class SmsResultResponse {
-  result: SmsResponse[];
+export class SmsResultResponseDto {
+  result: SmsResponseDto[];
 }

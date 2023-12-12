@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  Index,
+} from 'typeorm';
 import { Account } from '@/shared/database/entities/account.entity';
 
 @Entity()
@@ -15,6 +21,7 @@ export class Service {
   @Column({ type: 'uuid', unique: true, default: () => 'uuid_generate_v4()' })
   token?: string;
 
+  @Index('idx_service_account_active', ['accountId', 'active'])
   @Column()
   accountId: number;
 

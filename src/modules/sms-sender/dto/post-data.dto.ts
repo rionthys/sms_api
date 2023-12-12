@@ -1,6 +1,12 @@
-import { IsString, IsOptional, IsNumberString, IsUUID } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumberString,
+  IsUUID,
+  IsNumber,
+} from 'class-validator';
 
-export class PostData {
+export class PostDataDto {
   @IsUUID()
   PID: string;
 
@@ -26,8 +32,8 @@ export class PostData {
   @IsString()
   CRMCODE: string;
 
-  @IsNumberString()
-  CRMID: bigint;
+  @IsNumber()
+  CRMID: number;
 
   @IsString()
   BMess: string;

@@ -1,6 +1,6 @@
-import { PostData } from '../dto/post-data.dto';
-import { BulkSmsResponse } from '../dto/bulk-sms-response.dto';
+import { PostDataDto } from '../dto/post-data.dto';
+import { BulkSmsResponseDto } from '../dto/bulk-sms-response.dto';
 
 export interface IMessageSending {
-  sendMessage(postData: PostData): Promise<BulkSmsResponse>;
+  sendMessage(postData: PostDataDto): Promise<BulkSmsResponseDto>;
 }

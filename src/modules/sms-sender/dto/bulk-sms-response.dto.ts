@@ -1,6 +1,6 @@
 import { IsString, IsInt, IsOptional, IsUUID } from 'class-validator';
 
-export class BulkSmsResponse {
+export class BulkSmsResponseDto {
   @IsUUID()
   NRID: string;
 

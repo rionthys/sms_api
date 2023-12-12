@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PostData } from './dto/post-data.dto';
+import { PostDataDto } from './dto/post-data.dto';
 import { IDataAggregation } from './interfaces/data-aggregation.interface';
 import { MessageDto } from '@/shared/dto/message.dto';
 import { AccountRepository } from '@/shared/database/repositories/accounts.repository';
@@ -11,7 +11,7 @@ import * as crypto from 'crypto';
 @Injectable()
 export class DataAggregationService implements IDataAggregation {
   private readonly CRMCODE = appConfig.CRMCODE;
-
+  public service: Service | null;
   constructor(
     private accountRepo: AccountRepository,
     private serviceRepo: ServiceRepository,
@@ -27,19 +27,25 @@ export class DataAggregationService implements IDataAggregation {
   async aggregateData(
     message: MessageDto,
     account_id: number,
-  ): Promise<PostData> {
+  ): Promise<PostDataDto> {
     const service = await this.findService(message, account_id);
+
+    if (!service)
+      throw new BadRequestException(
+        `Active service ${message.service && message.service} not found`,
+      );
+
     const phash = this.getPhash(message?.sid + service.password + message.to);
 
     return {
       PID: message.sid,
       PHASH: phash,
-      DNIS: message.sid,
+      DNIS: message.to,
       ANI: '',
       Alias: service.alias,
       Enc: 'UTF-8',
       CRMCODE: this.CRMCODE,
-      CRMID: BigInt(service.id),
+      CRMID: service.id,
       BMess: message.text,
     };
   }
@@ -51,13 +57,14 @@ export class DataAggregationService implements IDataAggregation {
     const code = message.service
       ? { code: message.service }
       : { is_main: true };
-    const service = await this.serviceRepo.findOneByWhere({
+
+    this.service = await this.serviceRepo.findOneByWhere({
       accountId: account_id,
       ...code,
       active: true,
     });
 
-    return service;
+    return this.service;
   }
 
   private getPhash(input: string): string {
